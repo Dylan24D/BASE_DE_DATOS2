@@ -23,7 +23,12 @@
             <li class="nav-item-electric"><div class="nav-item-inner"><a href="tecnologias.html">Tecnologías</a></div></li>
             <li class="nav-item-electric"><div class="nav-item-inner"><a href="semanas.html">Semanas</a></div></li>
         </ul>
-        <button onclick="window.location.href='login.html'" class="btn-admin-electric">Ingresar Admin</button>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button onclick="toggleTheme()" class="theme-toggle-circle" title="Cambiar Tema">
+                <img id="theme-icon" src="assets/ghost.png" alt="Cambiar Tema">
+            </button>
+            <button onclick="window.location.href='login.html'" class="btn-admin-electric">Ingresar Admin</button>
+        </div>
     </nav>
 
     <header class="container" style="padding-top: 50px; padding-bottom: 30px;">
@@ -37,33 +42,76 @@
 
     <!-- CONTENEDORES DE LAS 16 SEMANAS (4x4) -->
     <section class="container">
-        <div class="semanas-grid">
-            <!-- Unidad 1 (Semanas 1-4) -->
-            <div class="unidad-semanas">
-                <h3 class="unidad-titulo">📚 UNIDAD I</h3>
-                <div id="semanas-u1" class="cards-grid"></div>
+        <div id="unidades-semanas" class="grid-unidades">
+            <!-- Unidad 01 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="toggleUnidad(1)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">📚 UNIDAD 01</h2>
+                        <span id="icon-1" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+                <div id="content-1" style="display: none; padding-top: 20px;">
+                    <div class="grid-4x4" id="semanas-u1"></div>
+                </div>
             </div>
-            <!-- Unidad 2 (Semanas 5-8) -->
-            <div class="unidad-semanas">
-                <h3 class="unidad-titulo">⚙️ UNIDAD II</h3>
-                <div id="semanas-u2" class="cards-grid"></div>
+
+            <!-- Unidad 02 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="toggleUnidad(2)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">⚙️ UNIDAD 02</h2>
+                        <span id="icon-2" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+                <div id="content-2" style="display: none; padding-top: 20px;">
+                    <div class="grid-4x4" id="semanas-u2"></div>
+                </div>
             </div>
-            <!-- Unidad 3 (Semanas 9-12) -->
-            <div class="unidad-semanas">
-                <h3 class="unidad-titulo">🔧 UNIDAD III</h3>
-                <div id="semanas-u3" class="cards-grid"></div>
+
+            <!-- Unidad 03 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="toggleUnidad(3)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">🔧 UNIDAD 03</h2>
+                        <span id="icon-3" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+                <div id="content-3" style="display: none; padding-top: 20px;">
+                    <div class="grid-4x4" id="semanas-u3"></div>
+                </div>
             </div>
-            <!-- Unidad 4 (Semanas 13-16) -->
-            <div class="unidad-semanas">
-                <h3 class="unidad-titulo">🚀 UNIDAD IV</h3>
-                <div id="semanas-u4" class="cards-grid"></div>
+
+            <!-- Unidad 04 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="toggleUnidad(4)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">🚀 UNIDAD 04</h2>
+                        <span id="icon-4" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+                <div id="content-4" style="display: none; padding-top: 20px;">
+                    <div class="grid-4x4" id="semanas-u4"></div>
+                </div>
             </div>
         </div>
     </section>
 
     <script src="script.js"></script>
+    <script>
+        function toggleUnidad(num) {
+            const content = document.getElementById(`content-${num}`);
+            const icon = document.getElementById(`icon-${num}`);
+            if (!content || !icon) return;
+            const isOpen = content.style.display === "block";
+            content.style.display = isOpen ? "none" : "block";
+            icon.innerText = isOpen ? "+" : "-";
+            icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+        }
+    </script>
 </body>
 </html>
+
 
 
 
