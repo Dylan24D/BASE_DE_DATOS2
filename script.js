@@ -15,6 +15,53 @@ function validarAcceso() {
 }
 
 // ============================================
+// LÓGICA GLOBAL DE DESCARGA (FORZAR PDF)
+// ============================================
+async function descargarArchivo(url, nombre) {
+    try {
+        const respuesta = await fetch(url);
+        const blob = await respuesta.blob();
+        const urlBlob = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = urlBlob;
+        link.download = nombre;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(urlBlob);
+    } catch (error) {
+        console.error("Error en descarga:", error);
+        window.open(url, '_blank'); // Fallback si falla el fetch
+    }
+}
+
+// ============================================
+// 1.5 LÓGICA DE TEMAS (GENGAR VS PIKACHU)
+// ============================================
+function toggleTheme() {
+    const body = document.body;
+    const isPikachu = body.classList.toggle('pikachu-theme');
+    localStorage.setItem('theme', isPikachu ? 'pikachu' : 'gengar');
+    updateThemeUI(isPikachu);
+}
+
+function initTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const isPikachu = savedTheme === 'pikachu';
+    if (isPikachu) document.body.classList.add('pikachu-theme');
+    updateThemeUI(isPikachu);
+}
+
+function updateThemeUI(isPikachu) {
+    const themeImg = document.getElementById('theme-icon');
+    if (themeImg) {
+        // Cambia estas rutas por las de tus imágenes reales de tipo
+        themeImg.src = isPikachu ? 'assets/electric.png' : 'assets/ghost.png';
+        themeImg.alt = isPikachu ? 'Tipo Eléctrico' : 'Tipo Fantasma';
+    }
+}
+
+// ============================================
 // 2. CONFIGURACIÓN SUPABASE
 // ============================================
 const SUPABASE_URL = 'https://iuemugmiuxzqwwhlbtcn.supabase.co'; 
@@ -141,14 +188,28 @@ async function cargarSemanas() {
                          onerror="this.src='${DEFAULT_IMAGE}'">
                     <div class="card-body">
                         <h3>Semana ${numeral}</h3>
-                        ${!esAdmin ? 
-                            `<button class="btn-view-pdf" ${tienePDF ? `onclick="window.open('${pdfFinal}','_blank')"` : 'disabled'}>
+                        <div class="card-button-group">
+                            <button class="btn-view-pdf" ${tienePDF ? `onclick="window.open('${pdfFinal}','_blank')"` : 'disabled'}>
                                 ${textoBoton}
-                            </button>` :
-                            `<button class="btn-delete" onclick="eliminarRegistro(${num})">
-                                🗑️ Borrar
-                            </button>`
-                        }
+                            </button>
+                            
+                            ${tienePDF ? `
+                                <div class="btn-row-small">
+                                    <button class="btn-view-pdf btn-small-action" onclick="window.open('${pdfFinal}','_blank')">
+                                        👁️ Proyecto
+                                    </button>
+                                    <button class="btn-view-pdf btn-small-action" onclick="descargarArchivo('${pdfFinal}', 'Semana_${numeral}.pdf')">
+                                        💾 Descargar
+                                    </button>
+                                </div>
+                            ` : ''}
+
+                            ${esAdmin ? `
+                                <button class="btn-delete" style="margin-top: 5px;" onclick="eliminarRegistro(${num})">
+                                    🗑️ Borrar Todo
+                                </button>` : ''
+                            }
+                        </div>
                     </div>
                 </div>`;
             return `<div class="electric-border-container"><div class="electric-border-inner">${inner}</div></div>`;
@@ -259,6 +320,7 @@ async function eliminarRegistro(id) {
 // 6. INICIALIZACIÓN
 // ============================================
 window.onload = () => {
+    initTheme();
     conectarBaseDeDatos();
 };
 
@@ -270,7 +332,6 @@ document.addEventListener('mousemove', (e) => {
         aura.style.setProperty('--mouse-y', `${(e.clientY / window.innerHeight) * 100}%`);
     }
 });
-
 
 
 
