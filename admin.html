@@ -22,9 +22,14 @@
                 ADMIN<span>PANEL</span>
             </div>
         </div>
-        <button onclick="window.location.href='index.html'" class="btn-admin-electric" style="border-color: #ef4444; color: #ef4444;">
-            Cerrar Sesión
-        </button>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <button onclick="toggleTheme()" class="theme-toggle-circle" title="Cambiar Tema">
+                <img id="theme-icon" src="assets/ghost.png" alt="Cambiar Tema">
+            </button>
+            <button onclick="window.location.href='index.html'" class="btn-admin-electric" style="border-color: #ef4444; color: #ef4444;">
+                Cerrar Sesión
+            </button>
+        </div>
     </nav>
 
     <div class="container">
@@ -72,8 +77,8 @@
         </div>
 
         <!-- SECCIONES DE UNIDADES (ACORDEÓN) -->
-        <div id="unidades-admin">
-            <div class="unidad-wrapper" style="margin-bottom: 20px;">
+        <div id="unidades-admin" class="grid-unidades">
+            <div class="unidad-wrapper">
                 <div class="electric-border-container" onclick="toggleUnidad(1)" style="cursor: pointer;">
                     <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0;">UNIDAD 01</h2>
@@ -83,7 +88,7 @@
                 <div id="content-1" style="display: none; padding-top: 20px;"><div class="grid-4x4" id="admin-u1"></div></div>
             </div>
 
-            <div class="unidad-wrapper" style="margin-bottom: 20px;">
+            <div class="unidad-wrapper">
                 <div class="electric-border-container" onclick="toggleUnidad(2)" style="cursor: pointer;">
                     <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0;">UNIDAD 02</h2>
@@ -93,7 +98,7 @@
                 <div id="content-2" style="display: none; padding-top: 20px;"><div class="grid-4x4" id="admin-u2"></div></div>
             </div>
 
-            <div class="unidad-wrapper" style="margin-bottom: 20px;">
+            <div class="unidad-wrapper">
                 <div class="electric-border-container" onclick="toggleUnidad(3)" style="cursor: pointer;">
                     <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0;">UNIDAD 03</h2>
@@ -103,7 +108,7 @@
                 <div id="content-3" style="display: none; padding-top: 20px;"><div class="grid-4x4" id="admin-u3"></div></div>
             </div>
 
-            <div class="unidad-wrapper" style="margin-bottom: 20px;">
+            <div class="unidad-wrapper">
                 <div class="electric-border-container" onclick="toggleUnidad(4)" style="cursor: pointer;">
                     <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
                         <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0;">UNIDAD 04</h2>
@@ -131,6 +136,8 @@
     </script>
 </body>
 </html>
+
+
 
 
 
