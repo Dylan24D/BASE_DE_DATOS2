@@ -16,6 +16,23 @@
     /* Lavanda apagado */
     --gengar-eyes: #FF003C;
     /* Rojo intenso de los ojos */
+    --aura-1: rgba(108, 59, 209, 0.15);
+    --aura-2: rgba(255, 0, 60, 0.08);
+}
+
+/* =========================================
+   ESTILO PIKACHU (MODO CLARO / ELÉCTRICO)
+   ========================================= */
+body.pikachu-theme {
+    --primary: #FFCC00;       /* Amarillo Pikachu Base */
+    --accent: #FFDE00;        /* Amarillo Eléctrico (Rayos) */
+    --dark-bg: #FFFDE7;       /* Fondo Crema/Amarillo muy claro */
+    --card-bg: #FFFFFF;       /* Tarjetas blancas */
+    --white: #2D2D2D;         /* Texto oscuro para legibilidad */
+    --text-muted: #555555;
+    --gengar-eyes: #00A8FF;   /* Azul Eléctrico (Contraste) */
+    --aura-1: rgba(255, 204, 0, 0.2);
+    --aura-2: rgba(0, 168, 255, 0.1);
 }
 
 * {
@@ -33,6 +50,32 @@ body {
 }
 
 /* =========================================
+   REGLAS ESPECÍFICAS TEMA PIKACHU
+   ========================================= */
+body.pikachu-theme .navbar { background: #FFCC00; border-bottom: 2px solid #3B4CCA; }
+body.pikachu-theme .nav-item-inner { background: #FFF176; color: #222; }
+body.pikachu-theme .hero { background: radial-gradient(circle, rgba(255, 222, 0, 0.4) 0%, var(--dark-bg) 100%); }
+
+/* Aseguramos que los contenedores de los rayos sean oscuros para que el amarillo brille */
+body.pikachu-theme .electric-border-container,
+body.pikachu-theme .nav-item-electric,
+body.pikachu-theme .btn-electric-wrapper { 
+    background: #1A1A1A; /* Gris carbón para resaltar los rayos amarillos */
+}
+
+/* Modificamos los colores de los botones específicos en modo Pikachu */
+body.pikachu-theme .card-img { background: #FFEA00; border-bottom: 1px solid rgba(59, 76, 202, 0.2); }
+body.pikachu-theme .input-group input { background: #fff; color: #222; border-color: #FFCC00; }
+body.pikachu-theme .file-dummy { background: rgba(255, 222, 0, 0.1); border-color: #FFDE00; }
+body.pikachu-theme .btn-view-pdf { background: #3B4CCA; color: #fff; border-color: #FFDE00; }
+body.pikachu-theme .btn-main-electric { background: #222; color: #FFDE00; }
+body.pikachu-theme .btn-admin-electric { border-color: #3B4CCA; color: #3B4CCA; background: #FFF176; }
+
+body.pikachu-theme .nav-links a { color: #444; }
+body.pikachu-theme .nav-links a:hover { color: var(--accent); }
+body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30%, var(--accent) 45%, var(--gengar-eyes) 55%, #555 70%); -webkit-background-clip: text; }
+
+/* =========================================
    NAVEGACIÓN
    ========================================= */
 .navbar {
@@ -46,6 +89,21 @@ body {
     top: 0;
     z-index: 1000;
     border-bottom: 1px solid rgba(186, 104, 200, 0.2);
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        padding: 1rem 4%;
+        justify-content: center;
+    }
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
 }
 
 .logo {
@@ -92,13 +150,19 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    background: radial-gradient(circle, rgba(43, 26, 71, 0.9) 0%, rgba(15, 9, 24, 1) 100%);
+    background: radial-gradient(circle, var(--primary) 0%, var(--dark-bg) 100%);
 }
 
 .hero h1 {
     font-size: 3.5rem;
     color: var(--white);
     margin: 10px 0;
+}
+
+@media (max-width: 600px) {
+    .hero h1 { font-size: 2.2rem; }
+    .titulo-arquitectura { font-size: 2.5rem !important; }
+    .hero-description { font-size: 1.1rem !important; }
 }
 
 .btn-main {
@@ -180,9 +244,38 @@ body {
    ========================================= */
 .grid-4x4 {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr; /* Ahora las semanas salen 1x1 */
     gap: 25px; /* Un poco más de espacio para los brillos */
     align-items: stretch;
+}
+
+/* =========================================
+   BOTÓN DE CAMBIO DE TEMA CIRCULAR
+   ========================================= */
+.theme-toggle-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 10px var(--aura-1);
+}
+
+.theme-toggle-circle:hover {
+    transform: scale(1.1) rotate(15deg);
+    box-shadow: 0 0 30px var(--accent);
+}
+
+.theme-toggle-circle img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* Contenedor del borde eléctrico */
@@ -245,8 +338,8 @@ body {
     width: 100%;
     height: 160px;
     object-fit: cover;
-    background: #2B1A47;
-    border-bottom: 1px solid rgba(186, 104, 200, 0.2);
+    background: var(--primary);
+    border-bottom: 1px solid rgba(186, 104, 200, 0.1);
 }
 
 .card-body {
@@ -260,6 +353,25 @@ body {
 /* =========================================
    BOTONES Y LOGIN
    ========================================= */
+
+/* Contenedor para múltiples botones en la tarjeta */
+.card-button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+}
+
+.btn-row-small {
+    display: flex;
+    gap: 8px;
+    width: 100%;
+}
+
+.btn-small-action {
+    flex: 1;
+    font-size: 0.7rem !important;
+}
 
 /* Botón de Visualización */
 .btn-view-pdf {
@@ -379,15 +491,6 @@ body {
 @keyframes rotate-electric {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
-}
-
-/* RESPONSIVO */
-@media (max-width: 1100px) {
-    .grid-4x4 { grid-template-columns: repeat(2, 1fr); }
-}
-
-@media (max-width: 650px) {
-    .grid-4x4 { grid-template-columns: 1fr; }
 }
 
 /* =========================================
@@ -794,7 +897,7 @@ body {
 
 /* Fondo base oscuro - Asegura consistencia en todo el sitio */
 body.gengar-fog {
-    background-color: #0d0714 !important;
+    background-color: var(--dark-bg);
     margin: 0;
     overflow-x: hidden;
 }
@@ -811,8 +914,8 @@ body.gengar-fog {
     width: 100vw;
     height: 100vh;
     background:
-        radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(108, 59, 209, 0.15), transparent 80%),
-        radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 0, 60, 0.08), transparent 100%);
+        radial-gradient(circle 400px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--aura-1), transparent 80%),
+        radial-gradient(circle 200px at var(--mouse-x, 50%) var(--mouse-y, 50%), var(--aura-2), transparent 100%);
     pointer-events: none; /* VITAL: Permite hacer clic a través del resplandor */
     z-index: -1; /* Se queda al fondo de todo */
     transition: background 0.1s ease;
@@ -845,7 +948,7 @@ body.gengar-fog {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #0d0714;
+    background: var(--dark-bg);
     position: relative;
     z-index: 1;
 }
@@ -885,14 +988,18 @@ body.gengar-fog {
 .gengar-sprite {
     position: fixed;
     bottom: 16px;
-    right: 320px; 
+    right: 5%; 
     width: 150px;
     height: auto;
-    z-index: 5; /* Bajado para que no tape botones del panel */
+    z-index: 5;
     opacity: 0.8;
     filter: drop-shadow(0 0 15px var(--gengar-eyes));
     pointer-events: none; /* No bloquea el mouse */
     transition: all 0.3s ease;
+}
+
+@media (max-width: 1200px) {
+    .gengar-sprite { display: none; } /* Ocultar en pantallas medianas/pequeñas para no estorbar */
 }
 
 .gengar-sprite img {
@@ -1181,27 +1288,26 @@ button:disabled, .card[style*="opacity: 0.6"] {
 /* Grid para las 4 semanas por unidad (admin y semanas) */
 .grid-4x4 {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 1fr;
     gap: 25px;
     margin-top: 20px;
-}
-
-/* Responsive del grid */
-@media (max-width: 1100px) {
-    .grid-4x4 {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 650px) {
-    .grid-4x4 {
-        grid-template-columns: 1fr;
-    }
 }
 
 /* Contenedor de las unidades (acordeón) */
 .unidad-wrapper {
     margin-bottom: 20px;
+}
+
+/* Nueva Cuadrícula para Unidades (2x2) */
+.grid-unidades {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    align-items: start; /* Importante para que no se estiren verticalmente si una está abierta */
+}
+
+@media (max-width: 950px) {
+    .grid-unidades { grid-template-columns: 1fr; }
 }
 
 /* Estilos para los selects del admin */
