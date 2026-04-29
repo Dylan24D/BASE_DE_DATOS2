@@ -15,13 +15,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="gengar-fog">
+    <!-- Capa de Animación Propia: Partículas Espectrales -->
+    <div class="spectral-stream">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Capa del aura que sigue al mouse -->
     <div class="mouse-aura"></div>
 
     <nav class="navbar">
-        <div class="logo nav-item-electric">
-            <div class="nav-item-inner" style="padding: 5px 10px;">
-                CHANCO TORRES <span>DYLAN DIEGO</span>
+        <div class="logo">
+            <img src="assets/logo_upla_sin_fondo.png" alt="Logo" style="height: 45px; width: auto; border-radius: 4px; border: 1px solid var(--accent); filter: drop-shadow(0 0 10px var(--aura-1));">
+            <div class="nav-item-electric">
+                <div class="nav-item-inner" style="padding: 8px 15px;">
+                    CHANCO TORRES <span>DYLAN DIEGO</span>
+                </div>
             </div>
         </div>
         <ul class="nav-links">
@@ -31,9 +50,25 @@
             <li class="nav-item-electric"><div class="nav-item-inner"><a href="semanas.html">Semanas</a></div></li>
         </ul>
         <div style="display: flex; gap: 15px; align-items: center;">
-            <button onclick="toggleTheme()" class="theme-toggle-circle" title="Cambiar Tema">
-                <img id="theme-icon" src="assets/ghost.png" alt="Cambiar Tema">
-            </button>
+            <div class="theme-selector-container">
+                <button onclick="toggleThemeMenu()" class="theme-toggle-circle" title="Seleccionar Tema">
+                    <img id="theme-icon" src="assets/siniestroo.png" alt="Tema">
+                </button>
+                <div id="theme-menu" class="theme-options">
+                    <button class="theme-btn-option theme-btn-darkrai" onclick="setTheme('darkrai')">
+                        <img src="assets/siniestroo.png" alt="Darkrai"> Darkrai
+                    </button>
+                    <button class="theme-btn-option theme-btn-charizard" onclick="setTheme('charizard')">
+                        <img src="assets/fuegoo.png" alt="Charizard"> Charizard
+                    </button>
+                    <button class="theme-btn-option theme-btn-greninja" onclick="setTheme('greninja')">
+                        <img src="assets/aguaaa.png" alt="Greninja"> Greninja
+                    </button>
+                    <button class="theme-btn-option theme-btn-sceptile" onclick="setTheme('sceptile')">
+                        <img src="assets/plantaa.png" alt="Sceptile"> Sceptile
+                    </button>
+                </div>
+            </div>
             <button onclick="window.location.href='login.html'" class="btn-admin-electric">Ingresar Admin</button>
         </div>
     </nav>
@@ -49,26 +84,37 @@
     </header>
 
     <!-- SECCIÓN SOBRE MÍ -->
-    <section class="container">
-        <div class="about-grid">
-            <div class="about-text">
-                <h2 class="text-shadow-curse" style="margin-bottom: 20px;">Sobre Mí</h2>
-                <p style="font-size: 1.1rem; color: var(--text-muted); margin-bottom: 25px;">
-                    Estudiante de Ingeniería de Sistemas y Computación apasionado por la gestión de datos. 
-                    Enfocado en el diseño de soluciones eficientes y arquitecturas de información escalables.
-                </p>
-                <ul class="info-list">
-                    <li style="margin-bottom: 10px;"><strong>Nombre:</strong> <span style="color: var(--accent);">CHANCO TORRES Dylan Diego</span></li>
-                    <li style="margin-bottom: 10px;"><strong>Carrera:</strong> Ingeniería de Sistemas</li>
-                    <li style="margin-bottom: 10px;"><strong>Ciclo:</strong> V Ciclo</li>
-                </ul>
+    <section class="container" style="padding-top: 20px;">
+        <div class="presentation-surround">
+            <!-- Columna Izquierda (3 Cuadros) -->
+            <div class="surround-column">
+                <div class="info-box-spectral"><h3>Perfil</h3><p>Estudiante de V ciclo de Ingeniería de Sistemas y Computación.</p></div>
+                <div class="info-box-spectral"><h3>Pasión</h3><p>Me apasiona el diseño gráfico y la eficiencia en bases de datos.</p></div>
+                <div class="info-box-spectral"><h3>Competitividad</h3><p>Mentalidad competitiva aplicada a soluciones sólidas y rápidas.</p></div>
             </div>
-            <div class="about-img">
+
+            <!-- Centro: Imagen -->
+            <div class="center-image-container">
                 <div class="img-frame float-gengar">
-                    <!-- Asegúrate de tener tu foto en assets/mi-foto.jpg -->
                     <img src="assets/mi-foto.jpg" alt="Foto Dylan" onerror="this.style.display='none'">
                 </div>
             </div>
+
+            <!-- Columna Derecha (3 Cuadros) -->
+            <div class="surround-column">
+                <div class="info-box-spectral"><h3>Visión</h3><p>Estructurar bases de datos con propósito, ritmo y estilo.</p></div>
+                <div class="info-box-spectral"><h3>Ojo Clínico</h3><p>Enfoque en que la información se vea e entienda impecablemente.</p></div>
+                <div class="info-box-spectral"><h3>Habilidades</h3><p>Capacidad para sincronizar funcionalidad con estética visual.</p></div>
+            </div>
+        </div>
+
+        <!-- Información Personal (Debajo) -->
+        <div style="margin-top: 40px; text-align: center;">
+            <ul class="info-list" style="display: flex; justify-content: center; gap: 30px; list-style: none; flex-wrap: wrap;">
+                <li><strong>Nombre:</strong> <span style="color: var(--accent);">CHANCO TORRES Dylan Diego</span></li>
+                <li><strong>Carrera:</strong> Ingeniería de Sistemas</li>
+                <li><strong>Ciclo:</strong> V Ciclo</li>
+            </ul>
         </div>
     </section>
 
@@ -103,6 +149,7 @@
     <!-- Vinculación del script principal -->
     <script src="script.js"></script>
 </body>
+</html>
 </html>
 
 
