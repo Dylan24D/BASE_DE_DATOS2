@@ -15,13 +15,32 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="gengar-fog">
+    <!-- Capa de Animación Propia: Partículas Espectrales -->
+    <div class="spectral-stream">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <!-- Capa del aura que sigue al mouse -->
     <div class="mouse-aura"></div>
 
     <nav class="navbar">
-        <div class="logo nav-item-electric">
-            <div class="nav-item-inner" style="padding: 5px 10px;">
-                CHANCO TORRES <span>DYLAN DIEGO</span>
+        <div class="logo">
+            <img src="assets/logo_upla_sin_fondo.png" alt="Logo" style="height: 45px; width: auto; border-radius: 4px; border: 1px solid var(--accent); filter: drop-shadow(0 0 10px var(--aura-1));">
+            <div class="nav-item-electric">
+                <div class="nav-item-inner" style="padding: 8px 15px;">
+                    CHANCO TORRES <span>DYLAN DIEGO</span>
+                </div>
             </div>
         </div>
         <ul class="nav-links">
@@ -31,9 +50,25 @@
             <li class="nav-item-electric"><div class="nav-item-inner"><a href="semanas.html">Semanas</a></div></li>
         </ul>
         <div style="display: flex; gap: 15px; align-items: center;">
-            <button onclick="toggleTheme()" class="theme-toggle-circle" title="Cambiar Tema">
-                <img id="theme-icon" src="assets/ghost.png" alt="Cambiar Tema">
-            </button>
+            <div class="theme-selector-container">
+                <button onclick="toggleThemeMenu()" class="theme-toggle-circle" title="Seleccionar Tema">
+                    <img id="theme-icon" src="assets/siniestroo.png" alt="Tema">
+                </button>
+                <div id="theme-menu" class="theme-options">
+                    <button class="theme-btn-option theme-btn-darkrai" onclick="setTheme('darkrai')">
+                        <img src="assets/siniestroo.png" alt="Darkrai"> Darkrai
+                    </button>
+                    <button class="theme-btn-option theme-btn-charizard" onclick="setTheme('charizard')">
+                        <img src="assets/fuegoo.png" alt="Charizard"> Charizard
+                    </button>
+                    <button class="theme-btn-option theme-btn-greninja" onclick="setTheme('greninja')">
+                        <img src="assets/aguaaa.png" alt="Greninja"> Greninja
+                    </button>
+                    <button class="theme-btn-option theme-btn-sceptile" onclick="setTheme('sceptile')">
+                        <img src="assets/plantaa.png" alt="Sceptile"> Sceptile
+                    </button>
+                </div>
+            </div>
             <button onclick="window.location.href='login.html'" class="btn-admin-electric">Ingresar Admin</button>
         </div>
     </nav>
@@ -48,53 +83,75 @@
         </div>
     </header>
 
-    <!-- SECCIÓN: EL CURSO (Herramientas Principales) -->
+    <!-- SECCIÓN: STACK TECNOLÓGICO -->
     <section class="container" style="padding-top: 0;">
-        <div class="hero-header-centered" style="text-align: center; margin-bottom: 30px;">
-            <h2 class="titulo-arquitectura text-spectral" style="font-size: 2.2rem;">DETALLES DEL CURSO</h2>
+        <div class="hero-header-centered" style="text-align: center; margin-bottom: 40px;">
+            <h2 class="titulo-arquitectura text-spectral" style="font-size: 2.2rem;">CORE STACK</h2>
         </div>
-        <div class="tech-grid">
+        <div class="tech-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+            <!-- GitHub -->
             <div class="tech-card">
                 <div class="tech-info">
-                    <h3>SQL Server</h3>
-                    <p>Dominio de T-SQL para el modelamiento, gestión y consulta de bases de datos relacionales estructuradas.</p>
+                    <h3 style="color: var(--accent);">GitHub: El Historial</h3>
+                    <p>Gestión de versiones y despliegue continuo mediante <strong>GitHub Pages</strong>. Permite el control total de cambios (Commits) y fomenta el Open Source.</p>
+                    <span style="font-size: 0.75rem; color: var(--gengar-eyes); font-weight: bold; text-transform: uppercase;">Key: Repository</span>
                 </div>
-                <img src="assets/sql.png" alt="Icono SQL" onerror="this.style.display='none'">
+                <img src="assets/github.png" alt="GitHub" onerror="this.style.display='none'">
             </div>
+            <!-- Supabase -->
             <div class="tech-card">
                 <div class="tech-info">
-                    <h3>GitHub</h3>
-                    <p>Gestión de repositorios y control de versiones para la documentación y despliegue técnico de arquitecturas.</p>
+                    <h3 style="color: var(--accent);">Supabase: El Cerebro</h3>
+                    <p>Backend as a Service (BaaS) con <strong>Auth</strong> simplificado, Edge Functions para lógica en la nube y seguridad a nivel de fila (RLS).</p>
+                    <span style="font-size: 0.75rem; color: var(--gengar-eyes); font-weight: bold; text-transform: uppercase;">Key: BaaS</span>
                 </div>
-                <img src="assets/github.png" alt="Icono Git" onerror="this.style.display='none'">
+                <img src="assets/oscuridad.png" alt="Supabase" style="filter: hue-rotate(150deg);" onerror="this.style.display='none'">
+            </div>
+            <!-- MySQL -->
+            <div class="tech-card">
+                <div class="tech-info">
+                    <h3 style="color: var(--accent);">MySQL: La Biblioteca</h3>
+                    <p>Estructura relacional para la persistencia de datos. Garantiza que la información esté organizada lógicamente mediante un <strong>Schema</strong> definido.</p>
+                    <span style="font-size: 0.75rem; color: var(--gengar-eyes); font-weight: bold; text-transform: uppercase;">Key: Schema</span>
+                </div>
+                <img src="assets/sql.png" alt="MySQL" onerror="this.style.display='none'">
             </div>
         </div>
     </section>
 
-    <!-- SECCIÓN: OBJETIVOS (Con bordes eléctricos Gengar) -->
-    <section class="container" style="padding-top: 20px;">
-        <div class="hero-header-centered" style="text-align: center; margin-bottom: 40px;">
-            <h2 class="titulo-arquitectura text-spectral" style="font-size: 2.2rem;">OBJETIVOS DEL CURSO</h2>
+    <!-- SECCIÓN: COMPARATIVA TÉCNICA -->
+    <section class="container" style="padding-top: 40px;">
+        <div class="hero-header-centered" style="text-align: center; margin-bottom: 20px;">
+            <h2 class="titulo-arquitectura text-spectral" style="font-size: 2.2rem;">RESUMEN FUNCIONAL</h2>
         </div>
-        <div class="tech-grid">
-            <!-- Objetivo 1 -->
-            <div class="electric-border-container">
-                <div class="electric-border-inner" style="padding: 25px;">
-                    <h3 style="color: var(--accent); margin-bottom: 12px; font-weight: 800;">Diseño Estructural</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-                        Comprender y aplicar los principios fundamentales de la arquitectura lógica y física en entornos de datos complejos y escalables.
-                    </p>
-                </div>
-            </div>
-            <!-- Objetivo 2 -->
-            <div class="electric-border-container">
-                <div class="electric-border-inner" style="padding: 25px;">
-                    <h3 style="color: var(--accent); margin-bottom: 12px; font-weight: 800;">Optimización de Flujos</h3>
-                    <p style="color: var(--text-muted); font-size: 0.95rem; line-height: 1.6;">
-                        Implementar soluciones integrales que garanticen la integridad, disponibilidad inmediata y seguridad de los activos de información críticos.
-                    </p>
-                </div>
-            </div>
+        
+        <div class="spectral-table-container">
+            <table class="spectral-table">
+                <thead>
+                    <tr>
+                        <th>Tecnología</th>
+                        <th>¿Dónde se usa?</th>
+                        <th>Importancia</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>GitHub</strong></td>
+                        <td>Despliegue (Deployment)</td>
+                        <td>Organización y hosting gratuito de código.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Supabase</strong></td>
+                        <td>Lógica de Usuario</td>
+                        <td>Añade interactividad y funciones de backend.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MySQL</strong></td>
+                        <td>Almacenamiento</td>
+                        <td>Persistencia y orden de datos pesados.</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </section>
 
