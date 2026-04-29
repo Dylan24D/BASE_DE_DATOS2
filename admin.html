@@ -11,6 +11,22 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="gengar-fog">
+    <!-- Capa de Animación Propia: Partículas Espectrales -->
+    <div class="spectral-stream">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
     <div class="mouse-aura"></div>
 
     <!-- MINI VENTANA DE NOTIFICACIÓN (TOAST) -->
@@ -18,14 +34,31 @@
 
     <nav class="navbar">
         <div class="logo nav-item-electric">
-            <div class="nav-item-inner" style="padding: 5px 10px;">
+            <div class="nav-item-inner" style="padding: 5px 10px; display: flex; align-items: center; gap: 10px;">
+                <img src="assets/logo_upla_sin_fondo.png" alt="Logo" style="height: 30px; width: auto; border-radius: 4px; border: 1px solid var(--accent);">
                 ADMIN<span>PANEL</span>
             </div>
         </div>
         <div style="display: flex; gap: 15px; align-items: center;">
-            <button onclick="toggleTheme()" class="theme-toggle-circle" title="Cambiar Tema">
-                <img id="theme-icon" src="assets/ghost.png" alt="Cambiar Tema">
-            </button>
+            <div class="theme-selector-container">
+                <button onclick="toggleThemeMenu()" class="theme-toggle-circle" title="Seleccionar Tema">
+                    <img id="theme-icon" src="assets/siniestroo.png" alt="Tema">
+                </button>
+                <div id="theme-menu" class="theme-options">
+                    <button class="theme-btn-option theme-btn-darkrai" onclick="setTheme('darkrai')">
+                        <img src="assets/siniestroo.png" alt="Darkrai"> Darkrai
+                    </button>
+                    <button class="theme-btn-option theme-btn-charizard" onclick="setTheme('charizard')">
+                        <img src="assets/fuegoo.png" alt="Charizard"> Charizard
+                    </button>
+                    <button class="theme-btn-option theme-btn-greninja" onclick="setTheme('greninja')">
+                        <img src="assets/aguaaa.png" alt="Greninja"> Greninja
+                    </button>
+                    <button class="theme-btn-option theme-btn-sceptile" onclick="setTheme('sceptile')">
+                        <img src="assets/plantaa.png" alt="Sceptile"> Sceptile
+                    </button>
+                </div>
+            </div>
             <button onclick="window.location.href='index.html'" class="btn-admin-electric" style="border-color: #ef4444; color: #ef4444;">
                 Cerrar Sesión
             </button>
@@ -120,6 +153,19 @@
         </div>
     </div>
 
+    <!-- MINI VENTANA PARA PDF (ADMIN) -->
+    <div id="modal-pdf" class="modal-overlay" onclick="cerrarVisualizadorPDF(event)">
+        <div class="modal-content" style="max-width: 1000px; width: 95%;">
+            <button class="btn-close" onclick="cerrarVisualizadorPDF(event)">×</button>
+            <div class="hero-header-centered">
+                <h2 id="pdf-modal-titulo" class="titulo-arquitectura" style="font-size: 2.2rem; margin-bottom: 20px;">VISTA PREVIA</h2>
+            </div>
+            <div class="pdf-viewer-container">
+                <iframe id="pdf-viewer-frame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
     <!-- SCRIPT PRINCIPAL (Debe ir después del HTML) -->
     <script src="script.js"></script>
 
@@ -136,6 +182,7 @@
     </script>
 </body>
 </html>
+
 
 
 
