@@ -38,26 +38,65 @@ async function descargarArchivo(url, nombre) {
 // ============================================
 // 1.5 LÓGICA DE TEMAS (GENGAR VS PIKACHU)
 // ============================================
+const TEMAS = ['darkrai', 'charizard', 'greninja', 'sceptile'];
+
+function toggleThemeMenu() {
+    const menu = document.getElementById('theme-menu');
+    if (menu) menu.classList.toggle('show');
+}
+
+// Cerrar el menú si se hace clic fuera
+document.addEventListener('click', (e) => {
+    const container = document.querySelector('.theme-selector-container');
+    const menu = document.getElementById('theme-menu');
+    if (container && !container.contains(e.target)) {
+        menu?.classList.remove('show');
+    }
+});
+
+function setTheme(themeName) {
+    const body = document.body;
+    body.classList.remove(...TEMAS.map(t => `${t}-theme`));
+    body.classList.add(`${themeName}-theme`);
+    localStorage.setItem('theme', themeName);
+    updateThemeUI(themeName);
+    document.getElementById('theme-menu')?.classList.remove('show');
+}
+
 function toggleTheme() {
     const body = document.body;
-    const isPikachu = body.classList.toggle('pikachu-theme');
-    localStorage.setItem('theme', isPikachu ? 'pikachu' : 'gengar');
-    updateThemeUI(isPikachu);
+    let currentTheme = localStorage.getItem('theme') || 'darkrai';
+    let nextIndex = (TEMAS.indexOf(currentTheme) + 1) % TEMAS.length;
+    let nextTheme = TEMAS[nextIndex];
+
+    body.classList.remove(...TEMAS.map(t => `${t}-theme`));
+    body.classList.add(`${nextTheme}-theme`);
+    
+    localStorage.setItem('theme', nextTheme);
+    updateThemeUI(nextTheme);
 }
 
 function initTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    const isPikachu = savedTheme === 'pikachu';
-    if (isPikachu) document.body.classList.add('pikachu-theme');
-    updateThemeUI(isPikachu);
+    const savedTheme = localStorage.getItem('theme') || 'darkrai';
+    document.body.classList.add(`${savedTheme}-theme`);
+    updateThemeUI(savedTheme);
 }
 
-function updateThemeUI(isPikachu) {
+function updateThemeUI(theme) {
     const themeImg = document.getElementById('theme-icon');
     if (themeImg) {
-        // Cambia estas rutas por las de tus imágenes reales de tipo
-        themeImg.src = isPikachu ? 'assets/electric.png' : 'assets/ghost.png';
-        themeImg.alt = isPikachu ? 'Tipo Eléctrico' : 'Tipo Fantasma';
+        const icons = {
+            'darkrai': 'assets/siniestroo.png',
+            'charizard': 'assets/fuegoo.png',
+            'greninja': 'assets/aguaaa.png',
+            'sceptile': 'assets/plantaa.png'
+        };
+        const alts = {
+            'darkrai': 'Tipo Siniestro', 'charizard': 'Tipo Fuego',
+            'greninja': 'Tipo Agua', 'sceptile': 'Tipo Planta'
+        };
+        themeImg.src = icons[theme] || 'assets/oscuridad.png';
+        themeImg.alt = alts[theme] || 'Cambiar Tema';
     }
 }
 
@@ -189,13 +228,13 @@ async function cargarSemanas() {
                     <div class="card-body">
                         <h3>Semana ${numeral}</h3>
                         <div class="card-button-group">
-                            <button class="btn-view-pdf" ${tienePDF ? `onclick="window.open('${pdfFinal}','_blank')"` : 'disabled'}>
+                            <button class="btn-view-pdf" ${tienePDF ? `onclick="abrirVisualizadorPDF('${pdfFinal}', 'Semana ${numeral}')"` : 'disabled'}>
                                 ${textoBoton}
                             </button>
                             
                             ${tienePDF ? `
                                 <div class="btn-row-small">
-                                    <button class="btn-view-pdf btn-small-action" onclick="window.open('${pdfFinal}','_blank')">
+                                    <button class="btn-view-pdf btn-small-action" onclick="abrirVisualizadorPDF('${pdfFinal}', 'Semana ${numeral}')">
                                         👁️ Proyecto
                                     </button>
                                     <button class="btn-view-pdf btn-small-action" onclick="descargarArchivo('${pdfFinal}', 'Semana_${numeral}.pdf')">
@@ -204,7 +243,7 @@ async function cargarSemanas() {
                                 </div>
                             ` : ''}
 
-                            ${esAdmin ? `
+                            ${(esAdmin && data) ? `
                                 <button class="btn-delete" style="margin-top: 5px;" onclick="eliminarRegistro(${num})">
                                     🗑️ Borrar Todo
                                 </button>` : ''
@@ -313,6 +352,70 @@ async function eliminarRegistro(id) {
         location.reload();
     } catch (error) {
         alert("Error al eliminar: " + error.message);
+    }
+}
+
+// ============================================
+// 5.5 LÓGICA DE MINI VENTANAS (MODALES)
+// ============================================
+function abrirModalUnidad(num, elemento) {
+    // 1. Efecto de animación al índice (botón)
+    elemento.classList.add('animacion-click-indice');
+    setTimeout(() => elemento.classList.remove('animacion-click-indice'), 600);
+
+    // 2. Obtener referencias
+    const modal = document.getElementById('modal-unidades');
+    const titulo = document.getElementById('modal-titulo');
+    const gridDestino = document.getElementById('modal-grid-content');
+    const gridOrigen = document.getElementById(`semanas-u${num}`);
+
+    if (!modal || !gridOrigen) return;
+
+    // 3. Preparar contenido
+    titulo.innerText = `UNIDAD 0${num}`;
+    gridDestino.innerHTML = gridOrigen.innerHTML; // Clonamos el contenido cargado de Supabase
+
+    // 4. Mostrar con delay para que se vea la animación del botón
+    setTimeout(() => {
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
+    }, 200);
+}
+
+function cerrarModalUnidad(event) {
+    // Cerrar solo si se hace clic en la X o fuera del contenido
+    if (event.target.classList.contains('modal-overlay') || event.target.classList.contains('btn-close')) {
+        document.getElementById('modal-unidades').style.display = 'none';
+        document.body.style.overflow = 'auto'; // Restaurar scroll
+    }
+}
+
+// ============================================
+// 5.7 VISUALIZADOR DE PDF EN MODAL
+// ============================================
+function abrirVisualizadorPDF(url, titulo) {
+    const modal = document.getElementById('modal-pdf');
+    const iframe = document.getElementById('pdf-viewer-frame');
+    const tituloModal = document.getElementById('pdf-modal-titulo');
+
+    if (modal && iframe && tituloModal) {
+        tituloModal.innerText = titulo;
+        iframe.src = url;
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+}
+
+function cerrarVisualizadorPDF(event) {
+    if (event && !event.target.classList.contains('modal-overlay') && !event.target.classList.contains('btn-close')) {
+        return;
+    }
+    const modal = document.getElementById('modal-pdf');
+    const iframe = document.getElementById('pdf-viewer-frame');
+    if (modal && iframe) {
+        modal.style.display = 'none';
+        iframe.src = '';
+        document.body.style.overflow = 'auto';
     }
 }
 
