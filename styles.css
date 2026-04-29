@@ -1,44 +1,102 @@
 /* =========================================
-   CONFIGURACIÓN Y COLORES (ESTILO GENGAR)
+   CONFIGURACIÓN Y COLORES (ESTILO DARKRAI)
    ========================================= */
 :root {
-    --primary: #2B1A47;
-    /* Púrpura Gengar Oscuro */
-    --accent: #BA68C8;
-    /* Violeta Eléctrico */
-    --dark-bg: #0F0918;
-    /* Sombra Profunda (Fondo ultra oscuro) */
-    --card-bg: #1E1231;
-    /* Cuerpo de Gengar */
-    --white: #F4F1FF;
-    /* Blanco lila */
-    --text-muted: #9486A8;
-    /* Lavanda apagado */
-    --gengar-eyes: #FF003C;
-    /* Rojo intenso de los ojos */
-    --aura-1: rgba(108, 59, 209, 0.15);
-    --aura-2: rgba(255, 0, 60, 0.08);
+    --primary: #0D0D0D;
+    /* Negro Carbón */
+    --accent: #FF1744;
+    /* Rojo Siniestro (Ojos Darkrai) */
+    --dark-bg: #050505;
+    /* Negro Abisal */
+    --card-bg: #121212;
+    /* Gris Sombra */
+    --white: #E0E0E0;
+    /* Plateado Neblina */
+    --text-muted: #757575;
+    /* Gris Ceniza */
+    --gengar-eyes: #FF5252;
+    /* Rojo de los detalles */
+    --aura-1: rgba(255, 23, 68, 0.1);
+    --aura-2: rgba(255, 255, 255, 0.05);
+}
+
+/* ANIMACIÓN GLOBAL DE FONDO */
+@keyframes bg-movement {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* FONDO DARKRAI (VACÍO ABISAL) */
+body.darkrai-theme {
+    background: linear-gradient(-45deg, #050505, #121212, #0D0D0D, #1A0A0A);
+    background-size: 400% 400%;
+    animation: bg-movement 15s ease infinite;
 }
 
 /* =========================================
-   ESTILO PIKACHU (MODO CLARO / ELÉCTRICO)
+   ESTILO CHARIZARD (MODO FUEGO)
    ========================================= */
-body.pikachu-theme {
-    --primary: #FFCC00;       /* Amarillo Pikachu Base */
-    --accent: #FFDE00;        /* Amarillo Eléctrico (Rayos) */
-    --dark-bg: #FFFDE7;       /* Fondo Crema/Amarillo muy claro */
-    --card-bg: #FFFFFF;       /* Tarjetas blancas */
-    --white: #2D2D2D;         /* Texto oscuro para legibilidad */
-    --text-muted: #555555;
-    --gengar-eyes: #00A8FF;   /* Azul Eléctrico (Contraste) */
-    --aura-1: rgba(255, 204, 0, 0.2);
-    --aura-2: rgba(0, 168, 255, 0.1);
+body.charizard-theme {
+    background: linear-gradient(-45deg, #0A0605, #160D0B, #2D1B14, #3E1B13);
+    background-size: 400% 400%;
+    animation: bg-movement 12s ease infinite;
+    --primary: #FF4E00;       /* Naranja Vivo (Llamarada) */
+    --accent: #FF9100;        /* Naranja Eléctrico / Ámbar */
+    --dark-bg: #0A0605;       /* Negro Volcánico */
+    --card-bg: #160D0B;       /* Carbón Incandescente */
+    --white: #FFF3E0;         /* Crema ceniza */
+    --text-muted: #A1887F;    /* Gris cálido */
+    --gengar-eyes: #00E5FF;   /* Cyan Brillante (Fuego de alas) */
+    --aura-1: rgba(255, 78, 0, 0.35); /* Calor radiante */
+    --aura-2: rgba(0, 229, 255, 0.2);  /* Brillo azul místico */
+}
+
+/* =========================================
+   ESTILO GRENINJA (MODO AGUA/NOCTURNO)
+   ========================================= */
+body.greninja-theme {
+    background: linear-gradient(-45deg, #0A0E14, #151B26, #1C2B4D, #0D1525);
+    background-size: 400% 400%;
+    animation: bg-movement 15s ease infinite;
+    --primary: #1C2B4D;       /* Azul Greninja */
+    --accent: #4ECDC4;        /* Celeste Agua */
+    --dark-bg: #0A0E14;       /* Fondo Abisal */
+    --card-bg: #151B26;
+    --white: #E0F2F1;
+    --text-muted: #78909C;
+    --gengar-eyes: #EFE8D1;   /* Beige de sus detalles */
+    --aura-1: rgba(78, 205, 196, 0.15);
+    --aura-2: rgba(239, 232, 209, 0.08);
+}
+
+/* =========================================
+   ESTILO SCEPTILE (MODO BOSQUE)
+   ========================================= */
+body.sceptile-theme {
+    background: linear-gradient(-45deg, #0D1A0D, #1A2E1A, #2D5A27, #122412);
+    background-size: 400% 400%;
+    animation: bg-movement 15s ease infinite;
+    --primary: #2D5A27;       /* Verde Hoja */
+    --accent: #A4C639;        /* Verde Lima */
+    --dark-bg: #0D1A0D;       /* Fondo Jungla */
+    --card-bg: #1A2E1A;
+    --white: #F1F8E9;
+    --text-muted: #81C784;
+    --gengar-eyes: #D50000;   /* Rojo de las semillas */
+    --aura-1: rgba(164, 198, 57, 0.15);
+    --aura-2: rgba(213, 0, 0, 0.08);
 }
 
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+}
+
+html {
+    /* Forza a que la barra de desplazamiento siempre sea visible para evitar que el contenido salte horizontalmente */
+    overflow-y: scroll;
 }
 
 body {
@@ -50,30 +108,116 @@ body {
 }
 
 /* =========================================
-   REGLAS ESPECÍFICAS TEMA PIKACHU
+   REGLAS ESPECÍFICAS TEMA CHARIZARD
    ========================================= */
-body.pikachu-theme .navbar { background: #FFCC00; border-bottom: 2px solid #3B4CCA; }
-body.pikachu-theme .nav-item-inner { background: #FFF176; color: #222; }
-body.pikachu-theme .hero { background: radial-gradient(circle, rgba(255, 222, 0, 0.4) 0%, var(--dark-bg) 100%); }
+body.charizard-theme .navbar { background: #FF4E00; border-bottom: 2px solid #FF9100; box-shadow: 0 0 20px rgba(255, 78, 0, 0.4); }
+body.charizard-theme .nav-item-inner { background: #160D0B; color: var(--white); }
+body.charizard-theme .hero { background: radial-gradient(circle, rgba(255, 78, 0, 0.25) 0%, var(--dark-bg) 100%); }
+body.charizard-theme .titulo-arquitectura { animation: charizard-color-cycle 2s ease-in-out infinite; }
 
-/* Aseguramos que los contenedores de los rayos sean oscuros para que el amarillo brille */
-body.pikachu-theme .electric-border-container,
-body.pikachu-theme .nav-item-electric,
-body.pikachu-theme .btn-electric-wrapper { 
-    background: #1A1A1A; /* Gris carbón para resaltar los rayos amarillos */
+/* Aseguramos que los bordes eléctricos resalten con el naranja */
+body.charizard-theme .electric-border-container,
+body.charizard-theme .nav-item-electric,
+body.charizard-theme .btn-electric-wrapper { 
+    background: #000;
 }
 
-/* Modificamos los colores de los botones específicos en modo Pikachu */
-body.pikachu-theme .card-img { background: #FFEA00; border-bottom: 1px solid rgba(59, 76, 202, 0.2); }
-body.pikachu-theme .input-group input { background: #fff; color: #222; border-color: #FFCC00; }
-body.pikachu-theme .file-dummy { background: rgba(255, 222, 0, 0.1); border-color: #FFDE00; }
-body.pikachu-theme .btn-view-pdf { background: #3B4CCA; color: #fff; border-color: #FFDE00; }
-body.pikachu-theme .btn-main-electric { background: #222; color: #FFDE00; }
-body.pikachu-theme .btn-admin-electric { border-color: #3B4CCA; color: #3B4CCA; background: #FFF176; }
+/* Modificamos los colores de los botones específicos en modo Charizard */
+body.charizard-theme .card-img { background: #3E1B13; border-bottom: 1px solid rgba(255, 78, 0, 0.3); }
+body.charizard-theme .input-group input { background: #160D0B; color: #fff; border-color: #FF4E00; }
+body.charizard-theme .file-dummy { background: rgba(255, 78, 0, 0.1); border-color: #FF9100; }
+body.charizard-theme .btn-view-pdf { background: #FF4E00; color: #fff; border-color: #00E5FF; }
+body.charizard-theme .btn-main-electric { background: #000; color: #FF9100; border: 1px solid #FF4E00; }
+body.charizard-theme .btn-admin-electric { border-color: #00E5FF; color: #00E5FF; background: #0A0605; }
 
-body.pikachu-theme .nav-links a { color: #444; }
-body.pikachu-theme .nav-links a:hover { color: var(--accent); }
-body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30%, var(--accent) 45%, var(--gengar-eyes) 55%, #555 70%); -webkit-background-clip: text; }
+body.charizard-theme .nav-links a { color: var(--text-muted); }
+body.charizard-theme .nav-links a:hover { color: var(--accent); }
+body.charizard-theme .subtitulo-upla { background: linear-gradient(120deg, #BCAAA4 30%, var(--accent) 45%, var(--gengar-eyes) 55%, #BCAAA4 70%); -webkit-background-clip: text; }
+
+/* OVERRIDES GRENINJA */
+body.greninja-theme .navbar { background: #1C2B4D; border-bottom: 2px solid #4ECDC4; }
+body.greninja-theme .nav-item-inner { background: #151B26; }
+body.greninja-theme .btn-view-pdf { border-color: #4ECDC4; color: #4ECDC4; }
+body.greninja-theme .btn-admin-electric { border-color: #4ECDC4; color: #4ECDC4; }
+body.greninja-theme .electric-border-container { background: #000; }
+body.greninja-theme .subtitulo-upla { background: linear-gradient(120deg, #78909C 30%, var(--accent) 45%, var(--gengar-eyes) 55%, #78909C 70%); -webkit-background-clip: text; }
+body.greninja-theme .titulo-arquitectura { animation: greninja-color-cycle 4s ease-in-out infinite; }
+
+/* OVERRIDES SCEPTILE */
+body.sceptile-theme .navbar { background: #2D5A27; border-bottom: 2px solid #A4C639; }
+body.sceptile-theme .nav-item-inner { background: #1A2E1A; }
+body.sceptile-theme .btn-view-pdf { border-color: #A4C639; color: #A4C639; }
+body.sceptile-theme .btn-admin-electric { border-color: #A4C639; color: #A4C639; }
+body.sceptile-theme .electric-border-container { background: #000; }
+body.sceptile-theme .subtitulo-upla { background: linear-gradient(120deg, #81C784 30%, var(--accent) 45%, var(--gengar-eyes) 55%, #81C784 70%); -webkit-background-clip: text; }
+body.sceptile-theme .titulo-arquitectura { animation: sceptile-color-cycle 4s ease-in-out infinite; }
+
+/* =========================================
+   ANIMACIÓN PROPIA: PARTÍCULAS ESPECTRALES
+   ========================================= */
+.spectral-stream {
+    position: fixed; /* Cambiado a fixed para que cubra todo el fondo al hacer scroll */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background: var(--accent);
+    border-radius: 50%;
+    filter: blur(5px);
+    opacity: 0.3;
+    box-shadow: 0 0 15px var(--accent);
+    animation: float-particle linear infinite;
+}
+
+/* Generación de variaciones para que haya "muchas animaciones" */
+.particle:nth-child(1) { width: 80px; height: 80px; left: 10%; animation-duration: 20s; animation-delay: -2s; }
+.particle:nth-child(2) { width: 40px; height: 40px; left: 25%; animation-duration: 15s; animation-delay: -5s; }
+.particle:nth-child(3) { width: 100px; height: 100px; left: 40%; animation-duration: 25s; animation-delay: -1s; }
+.particle:nth-child(4) { width: 60px; height: 60px; left: 60%; animation-duration: 18s; animation-delay: -8s; }
+.particle:nth-child(5) { width: 30px; height: 30px; left: 80%; animation-duration: 12s; animation-delay: -3s; }
+.particle:nth-child(6) { width: 120px; height: 120px; left: 90%; animation-duration: 30s; animation-delay: -10s; }
+.particle:nth-child(7) { width: 50px; height: 50px; left: 15%; animation-duration: 22s; animation-delay: -4s; }
+.particle:nth-child(8) { width: 90px; height: 90px; left: 35%; animation-duration: 28s; animation-delay: -6s; }
+.particle:nth-child(9) { width: 45px; height: 45px; left: 55%; animation-duration: 14s; animation-delay: -9s; }
+.particle:nth-child(10) { width: 70px; height: 70px; left: 75%; animation-duration: 19s; animation-delay: -2s; }
+.particle:nth-child(11) { width: 35px; height: 35px; left: 85%; animation-duration: 16s; animation-delay: -7s; }
+.particle:nth-child(12) { width: 110px; height: 110px; left: 5%; animation-duration: 35s; animation-delay: -12s; }
+
+@keyframes float-particle {
+    0% {
+        transform: translateY(110vh) translateX(0) scale(1);
+        opacity: 0;
+    }
+    10% {
+        opacity: 0.3;
+    }
+    50% {
+        transform: translateY(50vh) translateX(50px) scale(1.2);
+    }
+    90% {
+        opacity: 0.3;
+    }
+    100% {
+        transform: translateY(-20vh) translateX(-20px) scale(0.8);
+        opacity: 0;
+    }
+}
+
+/* Ajuste global para que el contenido principal esté por encima de las partículas */
+.hero .container, 
+.navbar, 
+.container, 
+.electric-border-container {
+    position: relative;
+    z-index: 2; /* Asegura que el texto y botones sean clicables */
+}
 
 /* =========================================
    NAVEGACIÓN
@@ -83,7 +227,7 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     justify-content: space-between;
     align-items: center;
     padding: 1rem 8%;
-    background: #160D23;
+    background: #0D0D0D;
     /* Navbar más oscuro */
     position: sticky;
     top: 0;
@@ -109,6 +253,9 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
 .logo {
     font-weight: 800;
     font-size: 1.4rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }
 
 .logo span {
@@ -183,6 +330,60 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     max-width: 1200px;
     margin: auto;
     padding: 60px 20px;
+}
+
+/* LAYOUT PRESENTACIÓN: IMAGEN CENTRAL Y 6 BOXES */
+.presentation-surround {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.surround-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+    min-width: 250px;
+}
+
+.info-box-spectral {
+    background: var(--card-bg);
+    border: 1px solid rgba(186, 104, 200, 0.1);
+    padding: 20px;
+    border-radius: 15px;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.info-box-spectral:hover {
+    border-color: var(--accent);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5), 0 0 15px var(--aura-1);
+}
+
+.info-box-spectral h3 {
+    color: var(--accent);
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+}
+
+.info-box-spectral p {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.4;
+}
+
+.center-image-container {
+    flex: 0 0 350px;
+    display: flex;
+    justify-content: center;
 }
 
 .title-center {
@@ -262,9 +463,78 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 8px;
+    padding: 2px;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     box-shadow: 0 0 10px var(--aura-1);
+}
+
+/* SELECTOR DE TEMAS DESPLEGABLE */
+.theme-selector-container {
+    position: relative;
+    z-index: 1001;
+}
+
+.theme-options {
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background: var(--card-bg);
+    border: 2px solid var(--accent);
+    border-radius: 15px;
+    padding: 10px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 15px var(--aura-1);
+    min-width: 160px;
+    animation: menu-pop-in 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.theme-options.show {
+    display: flex;
+}
+
+@keyframes menu-pop-in {
+    from { transform: translateY(-10px) scale(0.9); opacity: 0; }
+    to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.theme-btn-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 15px;
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-transform: capitalize;
+}
+
+.theme-btn-option img {
+    width: 24px;
+    height: 24px;
+    object-fit: contain;
+}
+
+.theme-btn-option:hover {
+    background: var(--primary);
+    border-color: var(--accent);
+    box-shadow: 0 0 10px var(--accent);
+    transform: translateX(-5px);
+}
+
+/* OCULTAR EL TEMA ACTUAL DEL MENÚ */
+body.darkrai-theme .theme-btn-darkrai,
+body.charizard-theme .theme-btn-charizard,
+body.greninja-theme .theme-btn-greninja,
+body.sceptile-theme .theme-btn-sceptile {
+    display: none;
 }
 
 .theme-toggle-circle:hover {
@@ -523,7 +793,6 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     to {
         box-shadow: 0 0 15px var(--gengar-eyes), 0 0 30px var(--gengar-eyes), 0 0 40px var(--accent);
         border-color: var(--accent);
-        transform: scale(1.05);
     }
 }
 
@@ -560,29 +829,69 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     100% { background-position: -200% 0; }
 }
 
-/* TITULO ARQUITECTURA CICLO DE COLORES GENGAR */
+/* TITULO ARQUITECTURA CICLO DE COLORES DARKRAI */
 .titulo-arquitectura {
     font-size: 4rem;
     font-weight: 900;
     text-transform: uppercase;
     text-align: center;
     color: var(--gengar-eyes);
-    animation: gengar-color-cycle 4s ease-in-out infinite;
+    animation: darkrai-color-cycle 4s ease-in-out infinite;
     text-shadow: 0 0 15px rgba(186, 104, 200, 0.6);
 }
 
-@keyframes gengar-color-cycle {
+@keyframes darkrai-color-cycle {
     0%, 100% {
-        color: var(--gengar-eyes);
-        text-shadow: 0 0 20px var(--gengar-eyes);
+        color: #FF1744;
+        text-shadow: 0 0 20px #FF1744;
     }
     33% {
-        color: var(--accent);
-        text-shadow: 0 0 20px var(--accent);
+        color: #E0E0E0;
+        text-shadow: 0 0 20px #757575;
     }
     66% {
-        color: var(--white);
-        text-shadow: 0 0 20px var(--primary);
+        color: #212121;
+        text-shadow: 0 0 20px #000;
+    }
+}
+
+/* CICLO DE COLORES CHARIZARD (FUEGO) */
+@keyframes charizard-color-cycle {
+    0%, 100% { 
+        color: #FF4E00; 
+        text-shadow: 0 0 10px #FF4E00, 0 0 25px #FF9100, 0 0 45px #FF1744; 
+    }
+    33% { 
+        color: #FFD54F; /* Brillo de llama intensa */
+        text-shadow: 0 0 20px #FFD54F; 
+    }
+    66% { 
+        color: #00E5FF; /* Fuego azul */
+        text-shadow: 0 0 15px #00E5FF, 0 0 35px #00B0FF; 
+    }
+}
+
+/* CICLO DE COLORES GRENINJA (AGUA/SHURIKEN) */
+@keyframes greninja-color-cycle {
+    0%, 100% {
+        color: #4ECDC4;
+        text-shadow: 0 0 20px #1C2B4D, 0 0 40px #4ECDC4;
+    }
+    50% {
+        color: #EFE8D1;
+        text-shadow: 0 0 20px #EFE8D1;
+    }
+}
+
+/* CICLO DE COLORES SCEPTILE (HOJA/SEMILLA) */
+@keyframes sceptile-color-cycle {
+    0%, 100% {
+        color: #A4C639;
+        text-shadow: 0 0 20px #2D5A27, 0 0 40px #A4C639;
+    }
+    50% {
+        color: #D50000; /* Rojo de las semillas de su espalda */
+        text-shadow: 0 0 20px #D50000;
     }
 }
 
@@ -895,11 +1204,11 @@ body.pikachu-theme .subtitulo-upla { background: linear-gradient(120deg, #555 30
     transform: translateX(-5px);
 }
 
-/* Fondo base oscuro - Asegura consistencia en todo el sitio */
-body.gengar-fog {
-    background-color: var(--dark-bg);
+/* Limpieza de clases antiguas */
+body {
     margin: 0;
     overflow-x: hidden;
+    background-attachment: fixed; /* Mantiene el fondo estático al hacer scroll */
 }
 
 /* =========================================
@@ -1029,6 +1338,21 @@ body.gengar-fog {
     transition: transform 0.5s ease;
 }
 
+/* ANIMACIÓN AL HACER CLIC EN EL ÍNDICE */
+.animacion-click-indice {
+    animation: index-pulse-effect 0.6s ease;
+}
+
+@keyframes index-pulse-effect {
+    0% { transform: scale(1); filter: brightness(1); }
+    30% { transform: scale(0.92); filter: brightness(1.8); }
+    50% { 
+        box-shadow: 0 0 40px var(--accent), 0 0 80px var(--gengar-eyes);
+        transform: scale(0.95);
+    }
+    100% { transform: scale(1); filter: brightness(1); }
+}
+
 .card:hover .card-img {
     transform: scale(1.1);
 }
@@ -1098,6 +1422,7 @@ body.gengar-fog {
     max-width: 800px;
     max-height: 85vh;
     background: var(--card-bg);
+    background-image: radial-gradient(circle at top right, rgba(255, 23, 68, 0.05), transparent);
     border: 2px solid var(--accent);
     border-radius: 20px;
     padding: 30px;
@@ -1119,6 +1444,7 @@ body.gengar-fog {
     border: none;
     color: var(--gengar-eyes);
     font-size: 2.5rem;
+    font-weight: bold;
     line-height: 1;
     cursor: pointer;
     z-index: 10;
@@ -1361,6 +1687,23 @@ button:disabled, .card[style*="opacity: 0.6"] {
     transition: transform 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+/* Estilo para el iframe del PDF */
+.pdf-viewer-container {
+    width: 100%;
+    height: 75vh;
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid var(--accent);
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.pdf-viewer-container iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
 .toast-notification.show {
     transform: translateX(0);
 }
@@ -1428,4 +1771,46 @@ button:disabled, .card[style*="opacity: 0.6"] {
 #semana-select:focus {
     border-color: var(--accent);
     box-shadow: 0 0 10px rgba(186, 104, 200, 0.3);
+}
+
+/* =========================================
+   TABLA ESPECTRAL (COMPARATIVA)
+   ========================================= */
+.spectral-table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin-top: 30px;
+    border-radius: 15px;
+    border: 1px solid rgba(186, 104, 200, 0.2);
+    background: var(--card-bg);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.spectral-table {
+    width: 100%;
+    border-collapse: collapse;
+    color: var(--white);
+    text-align: left;
+}
+
+.spectral-table th {
+    background: var(--primary);
+    color: var(--accent);
+    padding: 18px;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 2px;
+    border-bottom: 2px solid var(--accent);
+}
+
+.spectral-table td {
+    padding: 18px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.spectral-table tr:hover td {
+    background: rgba(255, 23, 68, 0.05);
+    color: var(--accent);
 }
