@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Semanas | Dylan Chanco</title>
+
+    <script src="supabase.js"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="gengar-fog">
+    <!-- Capa de Animación Propia: Partículas Espectrales -->
+    <div class="spectral-stream">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="mouse-aura"></div>
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="assets/logo_upla_sin_fondo.png" alt="Logo" style="height: 45px; width: auto; border-radius: 4px; border: 1px solid var(--accent); filter: drop-shadow(0 0 10px var(--aura-1));">
+            <div class="nav-item-electric">
+                <div class="nav-item-inner" style="padding: 8px 15px;">
+                    CHANCO TORRES <span>DYLAN DIEGO</span>
+                </div>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <li class="nav-item-electric"><div class="nav-item-inner"><a href="index.html">Inicio</a></div></li>
+            <li class="nav-item-electric"><div class="nav-item-inner"><a href="presentacion.html">Presentación</a></div></li>
+            <li class="nav-item-electric"><div class="nav-item-inner"><a href="tecnologias.html">Tecnologías</a></div></li>
+            <li class="nav-item-electric"><div class="nav-item-inner"><a href="semanas.html">Semanas</a></div></li>
+        </ul>
+        <div style="display: flex; gap: 15px; align-items: center;">
+            <div class="theme-selector-container">
+                <button onclick="toggleThemeMenu()" class="theme-toggle-circle" title="Seleccionar Tema">
+                    <img id="theme-icon" src="assets/siniestroo.png" alt="Tema">
+                </button>
+                <div id="theme-menu" class="theme-options">
+                    <button class="theme-btn-option theme-btn-darkrai" onclick="setTheme('darkrai')">
+                        <img src="assets/siniestroo.png" alt="Darkrai"> Darkrai
+                    </button>
+                    <button class="theme-btn-option theme-btn-charizard" onclick="setTheme('charizard')">
+                        <img src="assets/fuegoo.png" alt="Charizard"> Charizard
+                    </button>
+                    <button class="theme-btn-option theme-btn-greninja" onclick="setTheme('greninja')">
+                        <img src="assets/aguaaa.png" alt="Greninja"> Greninja
+                    </button>
+                    <button class="theme-btn-option theme-btn-sceptile" onclick="setTheme('sceptile')">
+                        <img src="assets/plantaa.png" alt="Sceptile"> Sceptile
+                    </button>
+                </div>
+            </div>
+            <button onclick="window.location.href='login.html'" class="btn-admin-electric">Ingresar Admin</button>
+        </div>
+    </nav>
+
+    <header class="container" style="padding-top: 50px; padding-bottom: 30px;">
+        <div class="hero-header-centered" style="text-align: center;">
+            <h1 class="titulo-arquitectura text-spectral">SEMANAS ACADÉMICAS</h1>
+            <h5 class="subtitulo-upla text-spectral" style="margin-top: 15px;">
+                ARQUITECTURA DE DATOS | V CICLO
+            </h5>
+        </div>
+    </header>
+
+    <section class="container">
+        <div id="unidades-semanas" class="grid-unidades">
+            <!-- Unidad 01 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="abrirModalUnidad(1, this)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">📚 UNIDAD 01</h2>
+                        <span id="icon-1" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unidad 02 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="abrirModalUnidad(2, this)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">⚙️ UNIDAD 02</h2>
+                        <span id="icon-2" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unidad 03 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="abrirModalUnidad(3, this)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">🔧 UNIDAD 03</h2>
+                        <span id="icon-3" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Unidad 04 -->
+            <div class="unidad-wrapper">
+                <div class="electric-border-container" onclick="abrirModalUnidad(4, this)" style="cursor: pointer;">
+                    <div class="electric-border-inner" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+                        <h2 class="titulo-arquitectura" style="font-size: 1.5rem; margin: 0; text-align: left;">🚀 UNIDAD 04</h2>
+                        <span id="icon-4" style="color: var(--gengar-eyes); font-size: 1.8rem; transition: 0.3s;">+</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- MODAL PARA MOSTRAR LAS SEMANAS DE UNA UNIDAD -->
+    <div id="modal-unidades" class="modal-overlay" onclick="cerrarModalUnidad(event)">
+        <div class="modal-content" style="max-width: 1100px; width: 95%;">
+            <button class="btn-close" onclick="cerrarModalUnidad(event)">×</button>
+            <div class="hero-header-centered">
+                <h2 id="modal-titulo" class="titulo-arquitectura" style="font-size: 2.5rem; margin-bottom: 20px;">UNIDAD</h2>
+            </div>
+            <div id="modal-grid-content" class="grid-4x4" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));">
+                <!-- Aquí se inyectarán las semanas dinámicamente -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL LISTA DE ARCHIVOS POR SEMANA -->
+    <div id="modal-lista-archivos" class="modal-overlay" onclick="cerrarModalMateriales(event)">
+        <div class="modal-content" style="max-width: 600px; width: 90%;">
+            <button class="btn-close" onclick="cerrarModalMateriales(event)">×</button>
+            <div class="hero-header-centered">
+                <h2 id="modal-archivos-titulo" class="titulo-arquitectura" style="font-size: 2.5rem; margin-bottom: 20px;">ARCHIVOS</h2>
+            </div>
+            <div id="lista-archivos-content" class="archivos-lista-grid"></div>
+        </div>
+    </div>
+
+    <!-- MINI VENTANA PARA PDF -->
+    <div id="modal-pdf" class="modal-overlay" onclick="cerrarVisualizadorPDF(event)">
+        <div class="modal-content" style="max-width: 1000px; width: 95%;">
+            <button class="btn-close" onclick="cerrarVisualizadorPDF(event)">×</button>
+            <div class="hero-header-centered">
+                <h2 id="pdf-modal-titulo" class="titulo-arquitectura" style="font-size: 2.2rem; margin-bottom: 20px;">PROYECTO</h2>
+            </div>
+            <div class="pdf-viewer-container">
+                <iframe id="pdf-viewer-frame" src=""></iframe>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
