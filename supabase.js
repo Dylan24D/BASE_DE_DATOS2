@@ -4,9 +4,9 @@
 
 (function() {
     const urls = [
-        "https://unpkg.com/@supabase/supabase-js@2",
-        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2",
-        "https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.33.1/umd/supabase.js"
+        "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js",
+        "https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js",
+        "https://cdnjs.cloudflare.com/ajax/libs/supabase-js/2.39.7/umd/supabase.js"
     ];
     
     let intento = 0;
