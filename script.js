@@ -138,6 +138,7 @@ const SUPABASE_URL = 'https://iuemugmiuxzqwwhlbtcn.supabase.co';
 const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Iml1ZW11Z21pdXh6cXd3aGxidGNuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY3MDk1MzAsImV4cCI6MjA5MjI4NTUzMH0.mONcS-nszajACwOXdnUJotVJBvn69wfVkrEtUtR0Y_s";
 let dbClient = null;
 const BUCKET_NAME = 'materiales';
+let isFetchingData = false;
 
 function mostrarMensajeUI(mensaje, tipo = "info") {
     let toast = document.getElementById('supabase-toast');
@@ -253,6 +254,8 @@ function crearTarjetaHTML(num, esAdmin = false) {
 
 async function cargarSemanas() {
     if (!dbClient) return;
+    if (isFetchingData) return;
+    isFetchingData = true;
     
     try {
         const { data: semanasDB, error } = await dbClient.from('semanas').select('*').order('id', { ascending: true });
@@ -288,7 +291,9 @@ async function cargarSemanas() {
         }
 
         console.log("✅ Semanas cargadas");
-    } catch (e) { console.error("Error cargando semanas:", e); }
+    } catch (e) { 
+        console.error("Error cargando semanas:", e); 
+    } finally { isFetchingData = false; }
 }
 
 // ============================================
@@ -416,19 +421,14 @@ function abrirModalUnidad(num, elemento) {
     const titulo = document.getElementById('modal-titulo');
     const gridDestino = document.getElementById('modal-grid-content');
 
-    if (!modal || !gridDestino) return;
-
-    if (Object.keys(globalDbMap).length === 0) {
-        gridDestino.innerHTML = `<p style="text-align:center; width:100%; color:var(--accent);">⏳ Invocando datos desde el abismo... (Cargando)</p>`;
-    } else {
-        let html = "";
-        for (let i = (num - 1) * 4 + 1; i <= num * 4; i++) html += crearTarjetaHTML(i);
-        gridDestino.innerHTML = html;
-    }
-
-    // Generar HTML de las 4 semanas de la unidad seleccionada al instante
+    if (!modal || !gridDestino || !titulo) return;
+    
     titulo.innerText = `UNIDAD 0${num}`;
-
+    
+    let html = "";
+    for (let i = (num - 1) * 4 + 1; i <= num * 4; i++) html += crearTarjetaHTML(i);
+    gridDestino.innerHTML = html;
+    
     if (modal.style.display !== 'flex') {
         activeModals++;
         modal.style.display = 'flex';
@@ -620,13 +620,3 @@ document.addEventListener('mousemove', (e) => {
         }
     });
 });
-
-
-
-
-
-
-
-
-
-
