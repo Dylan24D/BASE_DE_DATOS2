@@ -3,6 +3,37 @@
 // ============================================
 const CREDENCIALES = { user: "admin", pass: "123" };
 
+// Contador de modales abiertos para manejar el bloqueo del scroll sin conflictos
+let activeModals = 0;
+
+function updateBodyScroll() {
+    if (activeModals > 0) {
+        document.body.style.overflow = 'hidden';
+        document.body.classList.add('modal-active');
+    } else {
+        document.body.style.overflow = '';
+        document.body.classList.remove('modal-active');
+    }
+}
+
+function toggleUnidad(num) {
+    const content = document.getElementById(`content-${num}`);
+    const icon = document.getElementById(`icon-${num}`);
+    if (!content || !icon) return;
+    
+    const isOpen = content.style.display === "block";
+    
+    // Cerrar todas las demás para que solo una esté abierta (opcional, ayuda al rendimiento)
+    document.querySelectorAll('[id^="content-"]').forEach(el => el.style.display = 'none');
+    document.querySelectorAll('[id^="icon-"]').forEach(el => el.innerText = '+');
+    document.querySelectorAll('[id^="icon-"]').forEach(el => el.style.transform = 'rotate(0deg)');
+
+    // Abrir la seleccionada
+    content.style.display = isOpen ? "none" : "block";
+    icon.innerText = isOpen ? "+" : "-";
+    icon.style.transform = isOpen ? "rotate(0deg)" : "rotate(180deg)";
+}
+
 function validarAcceso() {
     const userIn = document.getElementById('user')?.value.trim();
     const passIn = document.getElementById('pass')?.value.trim();
@@ -134,51 +165,28 @@ function mostrarMensajeUI(mensaje, tipo = "info") {
     setTimeout(() => { if(toast) toast.remove(); }, 6000);
 }
 
-function esperarLibreria(maxIntentos = 30) {
-    return new Promise((resolve) => {
-        let intentos = 0;
-        const intervalo = setInterval(() => {
-            if (window.supabase) { clearInterval(intervalo); resolve(true); }
-            else if (intentos >= maxIntentos) { clearInterval(intervalo); resolve(false); }
-            intentos++;
-        }, 200);
-    });
-}
-
 async function conectarBaseDeDatos() {
-    console.log("🔄 Conectando a Supabase...");
+    if (dbClient) return true; // Ya conectado
     
-    const libreriaCargada = await esperarLibreria();
-    if (!libreriaCargada || !window.supabase) {
-        console.error("❌ Librería Supabase no cargada");
-        mostrarMensajeUI("Error: Librería no cargada", "error");
+    if (!window.supabase) {
+        console.log("⏳ Supabase no detectado aún, esperando al evento...");
         return false;
     }
-    
+
+    console.log("🔄 Conectando a Supabase...");
     try {
         dbClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
             auth: { persistSession: false }
         });
         
-        // Probar conexión
-        const { error } = await dbClient.from('semanas').select('count').limit(1);
-        if (error && !error.message.includes('relation')) throw error;
-        
         console.log("✅ Conectado a Supabase");
-        mostrarMensajeUI("Conectado a Supabase", "success");
         
-        // Verificar bucket
-        await verificarOCrearBucket();
-        
-        // Cargar semanas si hay contenedores
-        if (document.getElementById('semanas-u1') || document.getElementById('admin-u1')) {
-            await cargarSemanas();
-        }
+        // Cargar datos de inmediato
+        cargarSemanas();
         
         return true;
     } catch (error) {
-        console.error("Error conexión:", error);
-        mostrarMensajeUI("Error de conexión", "error");
+        console.error("❌ Error conexión:", error);
         return false;
     }
 }
@@ -198,71 +206,87 @@ async function verificarOCrearBucket() {
 // ============================================
 // 3. CARGAR SEMANAS (16 semanas, 4 unidades)
 // ============================================
+let globalDbMap = {}; // Guardamos los datos globalmente para acceder desde los modales
+const DEFAULT_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120' viewBox='0 0 200 120'%3E%3Crect width='200' height='120' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23666' dy='.3em'%3ESemana%3C/text%3E%3C/svg%3E";
+
+function crearTarjetaHTML(num, esAdmin = false) {
+    const numeral = num < 10 ? '0' + num : num;
+    const data = globalDbMap[num];
+    const imgFinal = data?.img_url || DEFAULT_IMAGE;
+    
+    // Procesar lista de archivos de forma robusta
+    let archivos = [];
+    if (data?.pdf_url) {
+        if (Array.isArray(data.pdf_url)) archivos = data.pdf_url;
+        else if (typeof data.pdf_url === 'string' && data.pdf_url.startsWith('[')) {
+            try { archivos = JSON.parse(data.pdf_url); } catch(e) {}
+        }
+    }
+    
+    const tieneMaterial = archivos.length > 0;
+    
+    let materialHTML = "";
+    if (tieneMaterial) {
+        materialHTML = `<button class="btn-view-pdf" onclick="abrirModalMateriales(${num})">📂 Ver Archivos (${archivos.length})</button>`;
+    } else {
+        materialHTML = `<button class="btn-view-pdf" disabled>🔒 Sin material</button>`;
+    }
+
+    const inner = `
+        <div class="card" style="opacity: ${data ? 1 : 0.7}">
+            <img src="${imgFinal}" class="card-img" alt="Semana ${numeral}" 
+                 onerror="this.src='${DEFAULT_IMAGE}'">
+            <div class="card-body">
+                <h3>Semana ${numeral}</h3>
+                <div class="card-button-group">
+                    ${materialHTML}
+                    ${(esAdmin && data) ? `
+                        <button class="btn-delete" style="margin-top: 5px;" onclick="eliminarRegistro(${num})">
+                            🗑️ Borrar Todo
+                        </button>` : ''
+                    }
+                </div>
+            </div>
+        </div>`;
+    return `<div class="electric-border-container"><div class="electric-border-inner">${inner}</div></div>`;
+}
+
 async function cargarSemanas() {
-    if (!dbClient) { await conectarBaseDeDatos(); if (!dbClient) return; }
+    if (!dbClient) return;
     
     try {
         const { data: semanasDB, error } = await dbClient.from('semanas').select('*').order('id', { ascending: true });
         if (error) throw error;
         
-        const dbMap = {};
-        semanasDB.forEach(item => { dbMap[item.id] = item; });
-        
-        const DEFAULT_IMAGE = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='120' viewBox='0 0 200 120'%3E%3Crect width='200' height='120' fill='%23333'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' fill='%23666' dy='.3em'%3ESemana%3C/text%3E%3C/svg%3E";
+        globalDbMap = {};
+        if (semanasDB) {
+            semanasDB.forEach(item => { globalDbMap[item.id] = item; });
+        }
         
         const esAdmin = !!document.getElementById('admin-u1');
         
-        const crearTarjeta = (num) => {
-            const numeral = num < 10 ? '0' + num : num;
-            const data = dbMap[num];
-            const imgFinal = data?.img_url || DEFAULT_IMAGE;
-            const pdfFinal = data?.pdf_url;
-            const tienePDF = !!pdfFinal;
-            
-            let textoBoton = tienePDF ? "📄 Ver PDF" : "🔒 Sin material";
-            
-            const inner = `
-                <div class="card" style="opacity: ${data ? 1 : 0.7}">
-                    <img src="${imgFinal}" class="card-img" alt="Semana ${numeral}" 
-                         onerror="this.src='${DEFAULT_IMAGE}'">
-                    <div class="card-body">
-                        <h3>Semana ${numeral}</h3>
-                        <div class="card-button-group">
-                            <button class="btn-view-pdf" ${tienePDF ? `onclick="abrirVisualizadorPDF('${pdfFinal}', 'Semana ${numeral}')"` : 'disabled'}>
-                                ${textoBoton}
-                            </button>
-                            
-                            ${tienePDF ? `
-                                <div class="btn-row-small">
-                                    <button class="btn-view-pdf btn-small-action" onclick="abrirVisualizadorPDF('${pdfFinal}', 'Semana ${numeral}')">
-                                        👁️ Proyecto
-                                    </button>
-                                    <button class="btn-view-pdf btn-small-action" onclick="descargarArchivo('${pdfFinal}', 'Semana_${numeral}.pdf')">
-                                        💾 Descargar
-                                    </button>
-                                </div>
-                            ` : ''}
-
-                            ${(esAdmin && data) ? `
-                                <button class="btn-delete" style="margin-top: 5px;" onclick="eliminarRegistro(${num})">
-                                    🗑️ Borrar Todo
-                                </button>` : ''
-                            }
-                        </div>
-                    </div>
-                </div>`;
-            return `<div class="electric-border-container"><div class="electric-border-inner">${inner}</div></div>`;
-        };
-        
         for (let u = 1; u <= 4; u++) {
             const contAdm = document.getElementById(`admin-u${u}`);
-            const contSem = document.getElementById(`semanas-u${u}`);
             let html = "";
-            for (let i = (u - 1) * 4 + 1; i <= u * 4; i++) html += crearTarjeta(i);
+            for (let i = (u - 1) * 4 + 1; i <= u * 4; i++) html += crearTarjetaHTML(i, esAdmin);
             if (contAdm) contAdm.innerHTML = html;
-            if (contSem) contSem.innerHTML = html;
         }
-        
+
+        // Soporte para ver todas las semanas en una cuadrícula única (útil para semanas.html)
+        const contTodas = document.getElementById('semanas-todas');
+        if (contTodas) {
+            let htmlTodas = "";
+            for (let i = 1; i <= 16; i++) htmlTodas += crearTarjetaHTML(i, esAdmin);
+            contTodas.innerHTML = htmlTodas;
+        }
+
+        // Si hay un modal abierto, actualizar su contenido con los datos recién llegados
+        const modalUnidad = document.getElementById('modal-unidades');
+        if (modalUnidad && modalUnidad.style.display === 'flex') {
+            const numUnidad = parseInt(document.getElementById('modal-titulo').innerText.slice(-1));
+            if (!isNaN(numUnidad)) abrirModalUnidad(numUnidad);
+        }
+
         console.log("✅ Semanas cargadas");
     } catch (e) { console.error("Error cargando semanas:", e); }
 }
@@ -291,6 +315,7 @@ async function guardarCambios() {
     
     try {
         const updates = { id: parseInt(semId) };
+        let currentBgUrl = null;
         
         // Subir imagen
         if (imgIn && imgIn.files.length > 0) {
@@ -300,18 +325,39 @@ async function guardarCambios() {
             const { error } = await dbClient.storage.from(BUCKET_NAME).upload(nombre, file, { upsert: true });
             if (error) throw error;
             const { data: urlData } = dbClient.storage.from(BUCKET_NAME).getPublicUrl(nombre);
-            updates.img_url = urlData.publicUrl;
+            currentBgUrl = urlData.publicUrl;
+            updates.img_url = currentBgUrl; // Fondo principal de la tarjeta
         }
         
-        // Subir PDF
+        // Subir Múltiples Archivos
         if (pdfIn && pdfIn.files.length > 0) {
-            const file = pdfIn.files[0];
-            const ext = file.name.split('.').pop();
-            const nombre = `pdfs/pdf_${semId}_${Date.now()}.${ext}`;
-            const { error } = await dbClient.storage.from(BUCKET_NAME).upload(nombre, file, { upsert: true });
-            if (error) throw error;
-            const { data: urlData } = dbClient.storage.from(BUCKET_NAME).getPublicUrl(nombre);
-            updates.pdf_url = urlData.publicUrl;
+            // Obtener archivos existentes para no borrarlos (Adjuntar)
+            const { data: currentWeek } = await dbClient.from('semanas').select('pdf_url, img_url').eq('id', semId).maybeSingle();
+            let listaArchivos = [];
+            if (currentWeek?.pdf_url) {
+                try { listaArchivos = JSON.parse(currentWeek.pdf_url); } catch(e){}
+            }
+            
+            // Si no se subió imagen nueva, intentar usar la del registro existente para los nuevos archivos
+            const bgParaArchivos = currentBgUrl || currentWeek?.img_url || null;
+
+            for (let i = 0; i < pdfIn.files.length; i++) {
+                const file = pdfIn.files[i];
+                const ext = file.name.split('.').pop();
+                const nombre = `materiales/sem${semId}_${Date.now()}_${i}.${ext}`;
+                
+                const { error } = await dbClient.storage.from(BUCKET_NAME).upload(nombre, file, { upsert: true });
+                if (error) throw error;
+                
+                const { data: urlData } = dbClient.storage.from(BUCKET_NAME).getPublicUrl(nombre);
+                listaArchivos.push({ 
+                    name: file.name, 
+                    url: urlData.publicUrl, 
+                    bg_url: bgParaArchivos 
+                });
+            }
+            // Guardamos la lista como JSON string
+            updates.pdf_url = JSON.stringify(listaArchivos);
         }
         
         // Guardar en BD
@@ -342,9 +388,16 @@ async function eliminarRegistro(id) {
             const path = semana.img_url.split('/materiales/')[1];
             if (path) await dbClient.storage.from(BUCKET_NAME).remove([path]);
         }
+        
         if (semana?.pdf_url) {
-            const path = semana.pdf_url.split('/materiales/')[1];
-            if (path) await dbClient.storage.from(BUCKET_NAME).remove([path]);
+            if (semana.pdf_url.startsWith('[')) {
+                const archivos = JSON.parse(semana.pdf_url);
+                const paths = archivos.map(a => a.url.split('/materiales/')[1]).filter(p => p);
+                if (paths.length > 0) await dbClient.storage.from(BUCKET_NAME).remove(paths);
+            } else {
+                const path = semana.pdf_url.split('/materiales/')[1];
+                if (path) await dbClient.storage.from(BUCKET_NAME).remove([path]);
+            }
         }
         
         await dbClient.from('semanas').delete().eq('id', id);
@@ -359,34 +412,39 @@ async function eliminarRegistro(id) {
 // 5.5 LÓGICA DE MINI VENTANAS (MODALES)
 // ============================================
 function abrirModalUnidad(num, elemento) {
-    // 1. Efecto de animación al índice (botón)
-    elemento.classList.add('animacion-click-indice');
-    setTimeout(() => elemento.classList.remove('animacion-click-indice'), 600);
-
-    // 2. Obtener referencias
     const modal = document.getElementById('modal-unidades');
     const titulo = document.getElementById('modal-titulo');
     const gridDestino = document.getElementById('modal-grid-content');
-    const gridOrigen = document.getElementById(`semanas-u${num}`);
 
-    if (!modal || !gridOrigen) return;
+    if (!modal || !gridDestino) return;
 
-    // 3. Preparar contenido
+    if (Object.keys(globalDbMap).length === 0) {
+        gridDestino.innerHTML = `<p style="text-align:center; width:100%; color:var(--accent);">⏳ Invocando datos desde el abismo... (Cargando)</p>`;
+    } else {
+        let html = "";
+        for (let i = (num - 1) * 4 + 1; i <= num * 4; i++) html += crearTarjetaHTML(i);
+        gridDestino.innerHTML = html;
+    }
+
+    // Generar HTML de las 4 semanas de la unidad seleccionada al instante
     titulo.innerText = `UNIDAD 0${num}`;
-    gridDestino.innerHTML = gridOrigen.innerHTML; // Clonamos el contenido cargado de Supabase
 
-    // 4. Mostrar con delay para que se vea la animación del botón
-    setTimeout(() => {
+    if (modal.style.display !== 'flex') {
+        activeModals++;
         modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden'; // Bloquear scroll de fondo
-    }, 200);
+    }
+    updateBodyScroll();
 }
 
 function cerrarModalUnidad(event) {
     // Cerrar solo si se hace clic en la X o fuera del contenido
     if (event.target.classList.contains('modal-overlay') || event.target.classList.contains('btn-close')) {
-        document.getElementById('modal-unidades').style.display = 'none';
-        document.body.style.overflow = 'auto'; // Restaurar scroll
+        const modal = document.getElementById('modal-unidades');
+        if (modal && modal.style.display === 'flex') {
+            activeModals--;
+            modal.style.display = 'none';
+        }
+        updateBodyScroll();
     }
 }
 
@@ -397,12 +455,37 @@ function abrirVisualizadorPDF(url, titulo) {
     const modal = document.getElementById('modal-pdf');
     const iframe = document.getElementById('pdf-viewer-frame');
     const tituloModal = document.getElementById('pdf-modal-titulo');
+    const container = document.querySelector('.pdf-viewer-container');
 
-    if (modal && iframe && tituloModal) {
+    if (modal && iframe && tituloModal && container) {
         tituloModal.innerText = titulo;
-        iframe.src = url;
-        modal.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
+        
+        // Detectar si el archivo es una imagen (especialmente pedido por el usuario)
+        const esImagen = /\.(jpg|jpeg|png|gif|webp)$/i.test(url);
+
+        if (esImagen) {
+            iframe.style.display = 'none';
+            let img = document.getElementById('img-viewer-temp');
+            if (!img) {
+                img = document.createElement('img');
+                img.id = 'img-viewer-temp';
+                img.style.cssText = "width:100%; height:100%; object-fit:contain; display:block;";
+                container.appendChild(img);
+            }
+            img.src = url;
+            img.style.display = 'block';
+        } else {
+            const img = document.getElementById('img-viewer-temp');
+            if (img) img.style.display = 'none';
+            iframe.src = url;
+            iframe.style.display = 'block';
+        }
+
+        if (modal.style.display !== 'flex') {
+            activeModals++;
+            modal.style.display = 'flex';
+        }
+        updateBodyScroll();
     }
 }
 
@@ -412,29 +495,132 @@ function cerrarVisualizadorPDF(event) {
     }
     const modal = document.getElementById('modal-pdf');
     const iframe = document.getElementById('pdf-viewer-frame');
-    if (modal && iframe) {
-        modal.style.display = 'none';
-        iframe.src = '';
-        document.body.style.overflow = 'auto';
+    const img = document.getElementById('img-viewer-temp');
+    if (modal) {
+        if (modal.style.display === 'flex') {
+            activeModals--;
+            modal.style.display = 'none';
+        }
+        if (iframe) iframe.src = '';
+        if (img) img.src = '';
+        updateBodyScroll();
     }
+}
+
+// ============================================
+// 5.8 MODAL DE LISTA DE ARCHIVOS (NUEVO FLUJO)
+// ============================================
+function abrirModalMateriales(num) {
+    const data = globalDbMap[num];
+    if (!data || !data.pdf_url) return;
+
+    const modal = document.getElementById('modal-lista-archivos');
+    const container = document.getElementById('lista-archivos-content');
+    const titulo = document.getElementById('modal-archivos-titulo');
+
+    if (!modal || !container || !titulo) return;
+
+    titulo.innerText = `Archivos: Semana ${num < 10 ? '0' + num : num}`;
+    let html = "";
+
+    // Obtener array de archivos procesado
+    let archivos = [];
+    if (Array.isArray(data.pdf_url)) archivos = data.pdf_url;
+    else if (typeof data.pdf_url === 'string') {
+        try { archivos = JSON.parse(data.pdf_url); } catch(e) { archivos = [{name: 'Archivo', url: data.pdf_url}]; }
+    }
+
+    archivos.forEach(arc => {
+        const styleBg = arc.bg_url ? `background-image: url('${arc.bg_url}');` : ``;
+        const iconPlaceholder = arc.bg_url ? '' : '<span style="font-size: 1.5rem; color: var(--text-muted);">📄</span>';
+
+        html += `
+            <div class="archivo-item">
+                <div class="archivo-bg-thumb" style="${styleBg}">
+                    ${iconPlaceholder}
+                </div>
+                <div class="archivo-info-wrapper">
+                    <span class="archivo-nombre" title="${arc.name}">${arc.name}</span>
+                    <div class="archivo-actions">
+                        <button class="btn-view-pdf btn-mini" onclick="abrirVisualizadorPDF('${arc.url}', '${arc.name}')">👁️ Ver</button>
+                        <button class="btn-view-pdf btn-mini" onclick="descargarArchivo('${arc.url}', '${arc.name}')">💾</button>
+                    </div>
+                </div>
+            </div>`;
+    });
+
+    container.innerHTML = html;
+    if (modal.style.display !== 'flex') {
+        activeModals++;
+        modal.style.display = 'flex';
+    }
+    updateBodyScroll();
+}
+
+function cerrarModalMateriales(event) {
+    if (event && !event.target.classList.contains('modal-overlay') && !event.target.classList.contains('btn-close')) return;
+    const modal = document.getElementById('modal-lista-archivos');
+    if (modal) {
+        if (modal.style.display === 'flex') {
+            activeModals--;
+            modal.style.display = 'none';
+        }
+        updateBodyScroll();
+    }
+}
+
+// ============================================
+// 5.9 LISTENERS PARA INPUTS DE ARCHIVOS
+// ============================================
+function initAdminListeners() {
+    const imgIn = document.getElementById('img-input');
+    const pdfIn = document.getElementById('pdf-input');
+
+    if (imgIn) imgIn.addEventListener('change', (e) => {
+        const fileName = e.target.files[0]?.name || "Seleccionar Fondo";
+        e.target.parentElement.querySelector('.text').innerText = fileName;
+    });
+
+    if (pdfIn) pdfIn.addEventListener('change', (e) => {
+        const count = e.target.files.length;
+        const text = count === 1 ? e.target.files[0].name : (count > 1 ? `${count} archivos seleccionados` : "Subir uno o varios archivos");
+        e.target.parentElement.querySelector('.text').innerText = text;
+    });
 }
 
 // ============================================
 // 6. INICIALIZACIÓN
 // ============================================
-window.onload = () => {
-    initTheme();
+// Escuchar evento de carga de Supabase para conectar lo antes posible
+window.addEventListener('supabase-cargado', () => {
     conectarBaseDeDatos();
-};
+});
+
+function inicializarTodo() {
+    initTheme();
+    initAdminListeners();
+    conectarBaseDeDatos();
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarTodo);
+} else {
+    inicializarTodo();
+}
 
 // Efecto Aura
+let auraReq;
 document.addEventListener('mousemove', (e) => {
-    const aura = document.querySelector('.mouse-aura');
-    if (aura) {
-        aura.style.setProperty('--mouse-x', `${(e.clientX / window.innerWidth) * 100}%`);
-        aura.style.setProperty('--mouse-y', `${(e.clientY / window.innerHeight) * 100}%`);
-    }
+    if (auraReq) cancelAnimationFrame(auraReq);
+    auraReq = requestAnimationFrame(() => {
+        const aura = document.querySelector('.mouse-aura');
+        if (aura) {
+            aura.style.setProperty('--mouse-x', `${(e.clientX / window.innerWidth) * 100}%`);
+            aura.style.setProperty('--mouse-y', `${(e.clientY / window.innerHeight) * 100}%`);
+        }
+    });
 });
+
 
 
 
