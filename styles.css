@@ -95,8 +95,9 @@ body.sceptile-theme {
 }
 
 html {
-    /* Forza a que la barra de desplazamiento siempre sea visible para evitar que el contenido salte horizontalmente */
-    overflow-y: scroll;
+    /* Mantiene el espacio de la barra reservado para evitar parpadeos y saltos de layout */
+    scrollbar-gutter: stable;
+    overflow-x: hidden;
 }
 
 body {
@@ -105,6 +106,11 @@ body {
     color: var(--white);
     line-height: 1.6;
     scroll-behavior: smooth;
+}
+
+/* Clase para evitar el lag: pausa animaciones cuando hay un modal abierto */
+body.modal-active .electric-border-container::before {
+    animation-play-state: paused;
 }
 
 /* =========================================
@@ -174,6 +180,7 @@ body.sceptile-theme .titulo-arquitectura { animation: sceptile-color-cycle 4s ea
     opacity: 0.3;
     box-shadow: 0 0 15px var(--accent);
     animation: float-particle linear infinite;
+    will-change: transform, opacity; /* Optimiza el renderizado de partículas */
 }
 
 /* Generación de variaciones para que haya "muchas animaciones" */
@@ -559,6 +566,7 @@ body.sceptile-theme .theme-btn-sceptile {
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     z-index: 1;
     height: 100%; /* Asegura que todas midan lo mismo */
+    will-change: transform; /* Suaviza el movimiento al hacer hover */
 }
 
 /* El "rayo" que gira - CORREGIDO: pointer-events: none para permitir clics */
@@ -1414,6 +1422,8 @@ body {
     z-index: 3000; /* Por encima de la navbar */
     backdrop-filter: blur(10px); /* Efecto de niebla más denso */
     transition: all 0.3s ease;
+    will-change: opacity;
+    overflow-y: auto; /* Permite scroll interno si el contenido es muy alto */
 }
 
 .modal-content {
@@ -1426,9 +1436,44 @@ body {
     border: 2px solid var(--accent);
     border-radius: 20px;
     padding: 30px;
-    overflow-y: auto;
-    box-shadow: 0 0 30px rgba(186, 104, 200, 0.3);
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.8), 0 0 30px var(--accent);
     animation: gengar-pop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin: 20px;
+}
+
+/* OPTIMIZACIÓN DE SCROLL PARA MODALES */
+
+/* 1. Modal de Unidades: Sin scroll porque siempre son 4 semanas */
+#modal-unidades .modal-content {
+    overflow: hidden;
+}
+
+/* 2. Modal de Archivos: Scroll optimizado y estable */
+#modal-lista-archivos .modal-content {
+    overflow-y: auto;
+    scrollbar-gutter: stable; /* Evita que el contenido salte al aparecer la barra */
+    padding-right: 35px; /* Espacio extra para que la barra no choque con el botón cerrar */
+}
+
+/* 3. Diseño de la barra de scroll personalizada (Webkit) */
+.modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+.modal-content::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+.modal-content::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 10px;
+    box-shadow: 0 0 5px var(--accent);
+}
+
+/* Permitir scroll en móviles si la pantalla es muy pequeña */
+@media (max-width: 600px) {
+    #modal-unidades .modal-content {
+        overflow-y: auto;
+    }
 }
 
 @keyframes gengar-pop {
@@ -1812,5 +1857,77 @@ button:disabled, .card[style*="opacity: 0.6"] {
 
 .spectral-table tr:hover td {
     background: rgba(255, 23, 68, 0.05);
-    color: var(--accent);
+}
+
+/* ESTILOS PARA LA LISTA DE ARCHIVOS EN MODAL */
+.archivos-lista-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.archivo-item {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    background: rgba(26, 17, 38, 0.6);
+    padding: 10px;
+    border-radius: 12px;
+    border: 2px solid var(--accent); /* El encuadro solicitado */
+    transition: 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.archivo-bg-thumb {
+    width: 80px;
+    height: 60px;
+    flex-shrink: 0;
+    border-radius: 8px;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--card-bg);
+}
+
+.archivo-info-wrapper {
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    overflow: hidden;
+}
+
+.archivo-nombre {
+    font-size: 0.9rem;
+    color: var(--white);
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 200px;
+}
+
+.archivo-actions {
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn-mini {
+    padding: 5px 12px !important;
+    font-size: 0.75rem !important;
+    width: auto !important;
+    margin-top: 0 !important;
+}
+
+.archivo-item:hover {
+    background: var(--primary);
+    box-shadow: 0 0 20px var(--aura-1);
+    transform: translateX(5px);
+    border-color: var(--gengar-eyes);
 }
